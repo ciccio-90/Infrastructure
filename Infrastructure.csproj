@@ -25,4 +25,15 @@
     <None Update=".\Logging\log4net.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles=".\Configuration\appconfig.json" DestinationFolder=".\Lib\Infrastructure\Configuration" />
+    <Copy SourceFiles=".\Logging\log4net.config" DestinationFolder=".\Lib\Infrastructure\Logging" />
+    <Copy SourceFiles="$(OutDir)\Infrastructure.dll" DestinationFolder=".\Lib\Infrastructure" />
+  </Target>
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles=".\Configuration\appconfig.json" DestinationFolder=".\Lib\Infrastructure\Configuration" />
+    <Copy SourceFiles=".\Logging\log4net.config" DestinationFolder=".\Lib\Infrastructure\Configuration" />
+    <Copy SourceFiles="$(PublishDir)\Infrastructure.dll" DestinationFolder=".\Lib\Infrastructure" />
+  </Target>
+
 </Project>

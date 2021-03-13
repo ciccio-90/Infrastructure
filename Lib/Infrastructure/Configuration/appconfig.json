@@ -1,0 +1,20 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": ""
+  },
+  "MailSettings": {
+    "Smtp": {
+        "Network": {
+            "Host": "",
+            "Port": 0,
+            "UserName": "",
+            "Password": "",
+            "DefaultCredentials": false
+        }
+    }
+  },
+  "NumberOfResultsPerPage": 6,
+  "CookieAuthenticationTimeout": 30,
+  "PayPalBusinessEmail": "",
+  "PayPalPaymentPostToUrl": ""
+}
