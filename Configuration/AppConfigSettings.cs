@@ -1,5 +1,6 @@
 using System.IO;
 using System.Reflection;
+using Infrastructure.Helpers;
 using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Configuration
@@ -17,7 +18,7 @@ namespace Infrastructure.Configuration
 
         public string ConnectionString
         {
-            get { return _configuration?.GetConnectionString("DefaultConnection"); }
+            get { return CryptoHelper.DecryptPwd(_configuration?.GetConnectionString("DefaultConnection")); }
         }
 
         public string MailSettingsSmtpNetworkHost
@@ -37,7 +38,7 @@ namespace Infrastructure.Configuration
 
         public string MailSettingsSmtpNetworkPassword
         {
-            get { return _configuration?["MailSettings:Smtp:Network:Password"]; }
+            get { return CryptoHelper.DecryptPwd(_configuration?["MailSettings:Smtp:Network:Password"]); }
         }
 
         public bool MailSettingsSmtpNetworkDefaultCredentials
@@ -47,12 +48,12 @@ namespace Infrastructure.Configuration
 
         public int NumberOfResultsPerPage
         {
-            get { return int.Parse(_configuration?["NumberOfResultsPerPage"]); }
+            get { return int.Parse(_configuration?["NumberOfResultsPerPage"] ?? "6"); }
         }
         
         public double CookieAuthenticationTimeout
         {
-            get { return double.Parse(_configuration?["CookieAuthenticationTimeout"]); }
+            get { return double.Parse(_configuration?["CookieAuthenticationTimeout"] ?? "30"); }
         }
 
         public string PayPalBusinessEmail
