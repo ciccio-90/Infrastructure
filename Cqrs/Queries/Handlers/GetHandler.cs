@@ -32,7 +32,14 @@ namespace Infrastructure.Cqrs.Queries.Handlers
             }
             else
             {
-                return await Task.FromResult<IEnumerable<T>>(_dataService.Get());
+                if (request?.Index != null && request?.Count != null)
+                {
+                    return await Task.FromResult<IEnumerable<T>>(_dataService.Get(_ => true, request.Index.Value, request.Count.Value));
+                }
+                else
+                {
+                    return await Task.FromResult<IEnumerable<T>>(_dataService.Get());
+                }
             }
         }
     }
