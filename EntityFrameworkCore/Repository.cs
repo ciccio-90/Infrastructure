@@ -53,11 +53,6 @@ namespace Infrastructure.EntityFrameworkCore
             return AppendCriteria(_dataContext.Set<T>());
         }
 
-        public IEnumerable<T> FindAll(int index, int count)
-        {
-            return AppendCriteria(_dataContext.Set<T>()).OrderBy(e => e.Id).Skip(index).Take(count);
-        }
-
         public virtual IQueryable<T> AppendCriteria(IQueryable<T> criteria)
         {
             return criteria;
