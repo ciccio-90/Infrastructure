@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -25,26 +26,60 @@ namespace Infrastructure.Authentication
 
             if (result.Succeeded)
             {
-                user.AuthenticationToken = Guid.NewGuid().ToString();
+                var identityUser = await _userManager.FindByEmailAsync(email);
+                user.Id = identityUser.Id;
                 user.Email = email;
                 user.IsAuthenticated = true;
+                user.Roles = await _userManager.GetRolesAsync(identityUser);
+            }
+            else
+            {
+                throw new InvalidOperationException("Sorry we could not log you in. Please try again.");            
             }
 
             return user;
         }
 
-        public async Task<User> RegisterUser(string email, string password)
+        public async Task<User> RegisterUser(string email, string password, bool confirmEmail, IEnumerable<string> roles)
         {
             User user = new User();
             user.IsAuthenticated = false;
-            var identityUser = new IdentityUser { UserName = email, Email = email };
-            var result = await _userManager.CreateAsync(identityUser, password);
+            var identityUser = new IdentityUser { UserName = email ?? string.Empty, Email = email ?? string.Empty, EmailConfirmed = confirmEmail };
+            var result = await _userManager.CreateAsync(identityUser, password ?? string.Empty);
                   
             if (result.Succeeded)
             {
-                user.AuthenticationToken = Guid.NewGuid().ToString();
+                user.Id = identityUser.Id;
                 user.Email = email;
                 user.IsAuthenticated = true;
+
+                if (roles?.Count() > 0)
+                {
+                    foreach (var role in roles)
+                    {
+                        result = await _userManager.AddToRoleAsync(identityUser, role);    
+
+                        if (!result.Succeeded)
+                        {
+                            user.IsAuthenticated = false;
+                            user.Id = user.Email = null;
+
+                            if (result.Errors?.Count() > 0)
+                            {
+                                throw new InvalidOperationException(result.Errors?.FirstOrDefault()?.Description);
+                            }
+                            else 
+                            {
+                                break;
+                            }
+                        }
+                    }       
+
+                    if (user.IsAuthenticated)
+                    {
+                        user.Roles = roles;
+                    }             
+                }
             }
             else
             {

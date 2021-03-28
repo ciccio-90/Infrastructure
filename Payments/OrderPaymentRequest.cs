@@ -15,5 +15,6 @@ namespace Infrastructure.Payments
         public string DeliveryAddressZipCode { get; set; }
         public int Id { get; set; }
         public IEnumerable<OrderItemPaymentRequest> Items { get; set; }
+        public string CurrencyCode { get; set; }
     }
 }

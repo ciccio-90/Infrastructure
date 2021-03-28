@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -16,12 +17,21 @@ namespace Infrastructure.Authentication
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task SetAuthenticationToken(string token)
+        public async Task SetAuthenticationToken(string email, IEnumerable<string> roles)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, token)
+                new Claim(ClaimTypes.Name, email)
             };
+
+            if (roles?.Count() > 0)
+            {
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+            }
+
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await _httpContextAccessor?.HttpContext?.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));

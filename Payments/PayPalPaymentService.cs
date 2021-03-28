@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure.Configuration;
 using Infrastructure.Helpers;
@@ -45,20 +43,8 @@ namespace Infrastructure.Payments
             // It simply will be passed to the IPN script at the time 
             // of transaction confirmation.
             postDataAndValue.Add("custom", orderRequest.Id.ToString());
-
-            try
-            {                
-                var regionInfo = new RegionInfo(Thread.CurrentThread?.CurrentCulture?.LCID ?? 2057);
-
-                // This parameter represents a currency code. 
-                postDataAndValue.Add("currency_code", regionInfo?.ISOCurrencySymbol ?? "GBP");
-            }
-            catch
-            {
-                // This parameter represents the default currency code. 
-                postDataAndValue.Add("currency_code", "GBP");
-            }
-
+            // This parameter represents the default currency code. 
+            postDataAndValue.Add("currency_code", orderRequest.CurrencyCode);
             postDataAndValue.Add("first_name", orderRequest.CustomerFirstName);
             postDataAndValue.Add("last_name", orderRequest.CustomerSecondName);
             postDataAndValue.Add("address1", orderRequest.DeliveryAddressAddressLine);

@@ -7,9 +7,6 @@ namespace Infrastructure.EntityFrameworkCore
     {
         public DataContext(DbContextOptions options) : base(options)
         {
-            ChangeTracker.AutoDetectChangesEnabled = false;
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            ChangeTracker.LazyLoadingEnabled = false;
         }
     }
 }
