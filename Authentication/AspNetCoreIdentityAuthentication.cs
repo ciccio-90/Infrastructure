@@ -20,8 +20,7 @@ namespace Infrastructure.Authentication
 
         public async Task<User> Login(string email, string password)
         {
-            User user = new User();
-            user.IsAuthenticated = false;
+            var user = new User();
             var result = await _signInManager.PasswordSignInAsync(email ?? string.Empty, password ?? string.Empty, false, true);
 
             if (result.Succeeded)
@@ -42,8 +41,7 @@ namespace Infrastructure.Authentication
 
         public async Task<User> RegisterUser(string email, string password, bool confirmEmail, IEnumerable<string> roles)
         {
-            User user = new User();
-            user.IsAuthenticated = false;
+            var user = new User();
             var identityUser = new IdentityUser { UserName = email ?? string.Empty, Email = email ?? string.Empty, EmailConfirmed = confirmEmail };
             var result = await _userManager.CreateAsync(identityUser, password ?? string.Empty);
                   
