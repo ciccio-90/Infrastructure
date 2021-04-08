@@ -60,7 +60,6 @@ namespace Infrastructure.Services.Implementations
         {
             T entity = _repository.FindBy(id);
 
-            entity.ThrowExceptionIfInvalid();
             _repository.Remove(entity);
             _uow.Commit();
         }
