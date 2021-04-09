@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Infrastructure.Domain;
 
-namespace Infrastructure.Services.Interfaces
+namespace Infrastructure.Domain
 {
-    public interface IDataService<T, TId> where T : EntityBase<TId>
+    public interface IEntityService<T, TId> where T : EntityBase<TId>
     {
         T Get(TId id);
         IEnumerable<T> Get(Expression<Func<T, bool>> predicate);

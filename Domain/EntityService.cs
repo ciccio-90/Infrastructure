@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Infrastructure.Domain;
-using Infrastructure.Services.Interfaces;
 
-namespace Infrastructure.Services.Implementations
+namespace Infrastructure.Domain
 {
-    public class DataService<T, TId> : IDataService<T, TId> where T : EntityBase<TId>
+    public class EntityService<T, TId> : IEntityService<T, TId> where T : EntityBase<TId>
     {
         private readonly IRepository<T, TId> _repository;
         private readonly IUnitOfWork _uow;
 
-        public DataService(IRepository<T, TId> repository, IUnitOfWork uow)
+        public EntityService(IRepository<T, TId> repository, IUnitOfWork uow)
         {
             _repository = repository;
             _uow = uow;
