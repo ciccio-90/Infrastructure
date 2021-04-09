@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Infrastructure.Domain;
-using Infrastructure.UnitOfWork;
 
 namespace Infrastructure.EntityFrameworkCore
 {
-    public class Repository<T, EntityKey> : IRepository<T, EntityKey>, IUnitOfWorkRepository where T : EntityBase<EntityKey>, IAggregateRoot
+    public class Repository<T, TId> : IRepository<T, TId> where T : EntityBase<TId>
     {
         protected readonly IUnitOfWork _uow;
         protected readonly DataContext _dataContext;
@@ -18,22 +17,7 @@ namespace Infrastructure.EntityFrameworkCore
             _dataContext = dataContext;
         }
 
-        public void Add(T entity)
-        {
-            PersistCreationOf(entity);
-        }
-
-        public void Remove(T entity)
-        {
-            PersistDeletionOf(entity);
-        }
-
-        public void Save(T entity)
-        {
-            PersistUpdateOf(entity);
-        }
-
-        public T FindBy(EntityKey id)
+        public T FindBy(TId id)
         {
             return AppendCriteria(_dataContext.Set<T>()).OrderBy(e => e.Id).FirstOrDefault(e => e.Id.Equals(id));
         }
@@ -58,19 +42,19 @@ namespace Infrastructure.EntityFrameworkCore
             return criteria;
         }
 
-        public void PersistCreationOf(IAggregateRoot entity)
+        public void Add(T entity)
         {
-            _uow.RegisterNew(entity, this);
+            _dataContext.Add(entity);
         }
 
-        public void PersistUpdateOf(IAggregateRoot entity)
+        public void Save(T entity)
         {
-            _uow.RegisterAmended(entity, this);
+            _dataContext.Update(entity);
         }
 
-        public void PersistDeletionOf(IAggregateRoot entity)
+        public void Remove(T entity)
         {
-            _uow.RegisterRemoved(entity, this);
+            _dataContext.Remove(entity);
         }
     }
 }

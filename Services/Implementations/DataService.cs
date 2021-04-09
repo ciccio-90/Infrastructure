@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Infrastructure.Domain;
 using Infrastructure.Services.Interfaces;
-using Infrastructure.UnitOfWork;
 
 namespace Infrastructure.Services.Implementations
 {
-    public class DataService<T, TId> : IDataService<T, TId> where T : EntityBase<TId>, IAggregateRoot
+    public class DataService<T, TId> : IDataService<T, TId> where T : EntityBase<TId>
     {
         private readonly IRepository<T, TId> _repository;
         private readonly IUnitOfWork _uow;
@@ -38,19 +37,19 @@ namespace Infrastructure.Services.Implementations
             return _repository.FindAll();
         }
 
-        public T Modify(T entity)
-        {            
+        public T Create(T entity)
+        {
             entity.ThrowExceptionIfInvalid();
-            _repository.Save(entity);
+            _repository.Add(entity);
             _uow.Commit();
 
             return entity;
         }
 
-        public T Create(T entity)
-        {
+        public T Modify(T entity)
+        {            
             entity.ThrowExceptionIfInvalid();
-            _repository.Add(entity);
+            _repository.Save(entity);
             _uow.Commit();
 
             return entity;

@@ -1,9 +1,9 @@
 namespace Infrastructure.Domain
 {
-    public interface IRepository<T, TId> : IReadOnlyRepository<T, TId> where T : IAggregateRoot
+    public interface IRepository<T, TId> : IReadOnlyRepository<T, TId> where T : EntityBase<TId>
     {
-        void Save(T entity);
         void Add(T entity);
+        void Save(T entity);
         void Remove(T entity);
     }
 }
